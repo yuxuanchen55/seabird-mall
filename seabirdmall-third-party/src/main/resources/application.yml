@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    alicloud:
+      oss:
+        endpoint: oss-us-west-1.aliyuncs.com
+      access-key: LTAI5tEc1hcCbEqszLSr4CeZ
+      secret-key: 7d09MdxdamzeAlTHYrSbXGapXlIAKP
+  application:
+    name: seabirdmall-third-party
+
+server:
+  port: 30000

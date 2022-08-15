@@ -13,7 +13,12 @@
 
 	<modules>
 		<module>seabirdmall-product</module>
-	</modules>
+		<module>renren-fast</module>
+		<module>renren-generator</module>
+        <module>seabirdmall-common</module>
+		<module>seabirdmall-gateway</module>
+		<module>seabirdmall-third-party</module>
+    </modules>
 
 
 </project>
