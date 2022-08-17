@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.yxc.seabirdmall.common.utils.PageUtils;
 import com.yxc.seabirdmall.common.utils.R;
+import com.yxc.seabirdmall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,8 @@ import com.yxc.seabirdmall.product.service.AttrGroupService;
 public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * 列表
@@ -49,6 +52,11 @@ public class AttrGroupController {
     //@RequiresPermissions("product:attrgroup:info")
     public R info(@PathVariable("id") Long id) {
         AttrGroupEntity attrGroup = attrGroupService.getById(id);
+
+        Integer categoryId = attrGroup.getCategoryId();
+        Long[] path = categoryService.findCategoryPath(categoryId);
+
+        attrGroup.setCategoryPath(path);
 
         return R.ok().put("attrGroup", attrGroup);
     }

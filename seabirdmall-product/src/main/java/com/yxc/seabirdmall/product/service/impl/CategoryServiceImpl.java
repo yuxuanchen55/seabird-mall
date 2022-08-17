@@ -4,9 +4,7 @@ import com.yxc.seabirdmall.common.utils.PageUtils;
 import com.yxc.seabirdmall.common.utils.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -45,6 +43,23 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 .peek(menu -> menu.setChildren(getChildren(menu, entities))).collect(Collectors.toList());
 
         return levelOneMenus;
+    }
+
+    @Override
+    public Long[] findCategoryPath(Integer categoryId) {
+        List<Long> path = new ArrayList<>();
+        findParentPath(categoryId, path);
+        Collections.reverse(path);
+        return path.toArray(new Long[0]);
+    }
+
+    private void findParentPath(Integer categoryId, List<Long> path) {
+        path.add(categoryId.longValue());
+        CategoryEntity category = this.getById(categoryId);
+
+        if (category.getParentId() != 0) {
+            findParentPath(category.getParentId(), path);
+        }
     }
 
 

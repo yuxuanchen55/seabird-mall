@@ -20,5 +20,6 @@ public interface CategoryService extends IService<CategoryEntity> {
 
     List<CategoryEntity> listWithThree();
 
+    Long[] findCategoryPath(Integer categoryId);
 }
 

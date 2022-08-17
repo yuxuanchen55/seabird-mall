@@ -1,10 +1,14 @@
 package com.yxc.seabirdmall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yxc.seabirdmall.common.utils.PageUtils;
 import com.yxc.seabirdmall.common.utils.R;
+import com.yxc.seabirdmall.product.service.BrandService;
+import com.yxc.seabirdmall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yxc.seabirdmall.product.entity.CategoryBrandEntity;
 import com.yxc.seabirdmall.product.service.CategoryBrandService;
-
 
 
 /**
@@ -30,15 +33,25 @@ public class CategoryBrandController {
     @Autowired
     private CategoryBrandService categoryBrandService;
 
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private BrandService brandService;
+
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @RequestMapping("/category/list")
     //@RequiresPermissions("product:categorybrand:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = categoryBrandService.queryPage(params);
-
-        return R.ok().put("page", page);
+    public R list(@RequestParam("brandId") Long brandId) {
+        List<CategoryBrandEntity> data = categoryBrandService.list(
+                new QueryWrapper<CategoryBrandEntity>().eq("brand_id", brandId)
+        );
+        for (CategoryBrandEntity categoryBrandEntity : data) {
+            categoryBrandEntity.setCategoryName(categoryService.getById(categoryBrandEntity.getCategoryId()).getName());
+            categoryBrandEntity.setBrandName(brandService.getById(categoryBrandEntity.getBrandId()).getName());
+        }
+        return R.ok().put("data", data);
     }
 
 
@@ -47,8 +60,8 @@ public class CategoryBrandController {
      */
     @RequestMapping("/info/{id}")
     //@RequiresPermissions("product:categorybrand:info")
-    public R info(@PathVariable("id") Integer id){
-		CategoryBrandEntity categoryBrand = categoryBrandService.getById(id);
+    public R info(@PathVariable("id") Integer id) {
+        CategoryBrandEntity categoryBrand = categoryBrandService.getById(id);
 
         return R.ok().put("categoryBrand", categoryBrand);
     }
@@ -58,8 +71,8 @@ public class CategoryBrandController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:categorybrand:save")
-    public R save(@RequestBody CategoryBrandEntity categoryBrand){
-		categoryBrandService.save(categoryBrand);
+    public R save(@RequestBody CategoryBrandEntity categoryBrand) {
+        categoryBrandService.save(categoryBrand);
 
         return R.ok();
     }
@@ -69,8 +82,8 @@ public class CategoryBrandController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:categorybrand:update")
-    public R update(@RequestBody CategoryBrandEntity categoryBrand){
-		categoryBrandService.updateById(categoryBrand);
+    public R update(@RequestBody CategoryBrandEntity categoryBrand) {
+        categoryBrandService.updateById(categoryBrand);
 
         return R.ok();
     }
@@ -80,9 +93,12 @@ public class CategoryBrandController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("product:categorybrand:delete")
-    public R delete(@RequestBody Integer[] ids){
-		categoryBrandService.removeByIds(Arrays.asList(ids));
-
+    public R delete(@RequestBody CategoryBrandEntity categoryBrandEntity) {
+//        categoryBrandService.removeByIds(Arrays.asList(ids));
+        categoryBrandService.remove(
+                new QueryWrapper<CategoryBrandEntity>().eq("category_id", categoryBrandEntity.getCategoryId())
+                        .eq("brand_id", categoryBrandEntity.getBrandId())
+        );
         return R.ok();
     }
 
