@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.yxc.seabirdmall.common.utils.PageUtils;
 import com.yxc.seabirdmall.common.utils.R;
+import com.yxc.seabirdmall.product.vo.AttrRespVo;
 import com.yxc.seabirdmall.product.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,10 +35,10 @@ public class AttrController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @RequestMapping("/base/list/{categoryId}")
     //@RequiresPermissions("product:attr:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = attrService.queryPage(params);
+    public R list(@RequestParam Map<String, Object> params, @PathVariable("categoryId") Long categoryId) {
+        PageUtils page = attrService.queryBaseAttrpage(params, categoryId);
 
         return R.ok().put("page", page);
     }
@@ -49,8 +50,8 @@ public class AttrController {
     @RequestMapping("/info/{id}")
     //@RequiresPermissions("product:attr:info")
     public R info(@PathVariable("id") Long id){
-		AttrEntity attr = attrService.getById(id);
-
+//		AttrEntity attr = attrService.getById(id);
+        AttrRespVo attr = attrService.getAttrInfo(id);
         return R.ok().put("attr", attr);
     }
 
@@ -70,8 +71,8 @@ public class AttrController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:attr:update")
-    public R update(@RequestBody AttrEntity attr){
-		attrService.updateById(attr);
+    public R update(@RequestBody AttrVo attrVo){
+		attrService.updateAttr(attrVo);
 
         return R.ok();
     }

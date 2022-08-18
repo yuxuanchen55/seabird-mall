@@ -6,8 +6,8 @@ spring:
     alicloud:
       oss:
         endpoint: oss-us-west-1.aliyuncs.com
-      access-key: TODO
-      secret-key: TODO
+      access-key: LTAI5tEc1hcCbEqszLSr4CeZ
+      secret-key: 7d09MdxdamzeAlTHYrSbXGapXlIAKP
   application:
     name: seabirdmall-third-party
 
